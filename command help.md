@@ -35,3 +35,7 @@ est_k8s"  --image-pull-policy=Never
 
 адрес сервиса
 minikube service django-k8s --url
+
+
+
+kubectl apply -f .\kubernetes\django-app.yaml
