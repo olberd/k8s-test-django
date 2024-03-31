@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  database5430:
+    extends:
+        file: docker-compose.yml
+        service: db
+    ports:
+      - "5430:5432"
+
+volumes:
+  db_data:
