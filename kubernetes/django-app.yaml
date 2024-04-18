@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: django-admin
   labels:
-    app.kubernetes.io/name: django-admin
+    name: django-admin
 spec:
   selector:
     matchLabels:
@@ -15,9 +15,13 @@ spec:
     spec:
       containers:
         - name: django-app
-          image: olberd/django-k8s
+          image: olberd/django-hub
           ports:
             - containerPort: 80
+          env:
+            - name: DEBUG
+              value: "True"
+
 
 ---
 apiVersion: v1
@@ -31,7 +35,8 @@ spec:
   selector:
     app: django-app
   ports:
-    - protocol: TCP
+    - name: django-listener
+      protocol: TCP
       port: 80
       targetPort: 80
-  type: LoadBalancer
+  type: NodePort

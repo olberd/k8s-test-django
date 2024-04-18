@@ -1,12 +1,12 @@
 version: "3"
 
 services:
-  database5430:
+  postgres-for-k8s:
     extends:
         file: docker-compose.yml
         service: db
     ports:
-      - "5430:5432"
+      - "5432:5432"
 
 volumes:
   db_data:
