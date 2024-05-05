@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: django-clearsessions
+  labels:
+    utils: django-clearsessions
+spec:
+  containers:
+    - name: django-clearsessions
+      image: olberd/django-hub
+      imagePullPolicy: IfNotPresent
+      command:
+        - python
+        - manage.py
+        - clearsessions
+
+  restartPolicy: Never

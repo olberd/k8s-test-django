@@ -51,3 +51,13 @@ kubectl apply -f .\kubernetes\django-app.yaml
               value: adfasijvlkjvpoivzkjhfsda
             - name: DATABASE_URL
               value: postgres://test_k8s:OwOtBep9Frut@192.168.1.34:5430/test_k8s
+
+kubectl run django-clearsessions --image=olberd/django-hub --restart=Never --dry-run=client -o yaml --command -- python manage.py clearsessions
+kubectl run django-clearsessions --image=olberd/django-hub  --dry-run=client -o yaml --restart=Never   --command python manage.py clearsessions 
+kubectl run django-clearsessions --image=olberd/django-hub  --command python manage.py clearsessions 
+
+kubectl run clearsessions --image=olberd/django-hub --env="DATABASE_URL=postgres://test_k8s:OwOtBep9Frut@192.168.1.34:5430/t
+est_k8s" --command -- ['python', 'manage.py', 'clearsessions']
+
+kubectl run clearsessions --image=olberd/django-hub --command -- ['python', 'manage.py', 'clearsessions']
+kubectl run clearsessions1 --image=olberd/django-hub --command -- ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
