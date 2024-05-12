@@ -93,7 +93,7 @@ $ docker compose build web
 
 # Деплой в Minikube (Windows, Hyper-V)
 
-1. Установите
+### 1. Установите
 
 #### [kubectl](https://kubernetes.io/ru/docs/tasks/tools/install-kubectl/)
 
@@ -129,7 +129,7 @@ kubectl cluster-info
 CoreDNS is running at https://172.20.55.46:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.`
 
-2. Создайте образ приложения. Соберите образ с приложением `django`. Перейдите в папку проекта.
+### 2. Создайте образ приложения. Соберите образ с приложением `django`. Перейдите в папку проекта.
 
 ```sh
 cd 'ваш путь до папки проекта'\k8s-test-django\
@@ -163,7 +163,7 @@ docker push имя_репозитория/имя_образа
 Например:  
 `image: olberd/django-hub`
 
-3. Активируйте `ingress`
+### 3. Активируйте `ingress`
 
 ```sh
 minikube addons enable ingress
@@ -176,7 +176,7 @@ kubectl apply -f .\kubernetes\ingress.yaml
 kubectl get ingress
 ```
 
-4. Активируйте автоматический `clearsessions`
+#### 4. Активируйте автоматический `clearsessions`
 
 ```sh
 kubectl apply -f .\kubernetes\clearsessions_cron_job.yaml
@@ -184,3 +184,38 @@ kubectl apply -f .\kubernetes\clearsessions_cron_job.yaml
 
 Проверить:
 ```kubectl get cronjob```
+
+### 5. Создание и подключение к БД PostgreSQL с помощью Minikube и [Helm](https://helm.sh/)
+
+- добавить хранилище helm `postgresql` в кластер Minikube:
+
+```bash
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+```
+
+- установите БД postgresql в кластере Minikube с параметрами:
+
+```bash
+helm install dev-pg bitnami/postgresql \  
+  --set global.postgresql.auth.postgresPassword=<YOUR-POSTGRES-PASSWORD> \
+  --set global.postgresql.auth.username=test_k8s \
+  --set global.postgresql.auth.password=OwOtBep9Frut \
+  --set global.postgresql.auth.database=test_k8s \
+  --set global.postgresql.service.ports.postgresql=5432
+```
+
+- для доступа к созданной БД:
+
+```bash
+kubectl run dev-pg-postgresql-client --rm --tty -i --restart=Never \
+  --namespace default \
+  --image docker.io/bitnami/postgresql:16.2.0-debian-12-r5  --env="PGPASSWORD=<YOUR-POSTGRES-PASSWORD>" \
+  --command -- psql --host dev-pg-postgresql -U test_k8s -d test_k8s -p 5432
+```
+
+Чтобы иметь к данной БД доступ в проекте джанго, необходимо в файле Secret.yaml прописать:
+
+```bash
+stringData:
+  database_url: "postgres://test_k8s:OwOtBep9Frut@dev-pg-postgresql:5432/test_k8s"
