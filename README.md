@@ -176,7 +176,13 @@ kubectl apply -f .\kubernetes\ingress.yaml
 kubectl get ingress
 ```
 
-#### 4. Активируйте автоматический `clearsessions`
+### 4. Запустите проект джанго
+
+~~~
+kubectl apply -f  .\kubernetes\django-app.yaml
+~~~
+
+### 5. Активируйте автоматический `clearsessions`
 
 ```sh
 kubectl apply -f .\kubernetes\clearsessions_cron_job.yaml
@@ -185,7 +191,7 @@ kubectl apply -f .\kubernetes\clearsessions_cron_job.yaml
 Проверить:
 ```kubectl get cronjob```
 
-### 5. Создание и подключение к БД PostgreSQL с помощью Minikube и [Helm](https://helm.sh/)
+### 6. Создание и подключение к БД PostgreSQL с помощью Minikube и [Helm](https://helm.sh/)
 
 - добавить хранилище helm `postgresql` в кластер Minikube:
 
