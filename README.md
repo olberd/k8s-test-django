@@ -136,7 +136,7 @@ cd 'ваш путь до папки проекта'\k8s-test-django\
 ```
 
 ```sh
-docker image build ./backend_main_django/ -t olberd/django-hub
+docker image build ./backend_main_django/ -t имя_репозитория/имя_образа
 ```
 
 Проверить результат:
@@ -147,10 +147,16 @@ docker image ls
 
 `-> ... olberd/django-hub latest c841ac0b86f8 4 weeks ago 963MB ...`
 
-Выложите образ в [dockerhub](https://hub.docker.com/)
+Войдите в Docker Hub:
 
 ```sh
-docker push olberd/django-hub
+docker login
+```
+
+Загрузите образ в [dockerhub](https://hub.docker.com/)
+
+```sh
+docker push имя_репозитория/имя_образа
 ``` 
 
 Запишите ссылку на образ в файле django-app.yaml    
