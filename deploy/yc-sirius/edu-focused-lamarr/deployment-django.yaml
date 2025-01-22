@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-app
+  namespace: edu-focused-lamarr
+spec:
+  selector:
+    matchLabels:
+      app: django-app
+  template:
+    metadata:
+      labels:
+        app: django-app
+    spec:
+      containers:
+        - name: django-app
+          image: olberd/django-hub:latest
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: dsn
+          envFrom:
+            - configMapRef:
+                name: django-config
+            - secretRef:
+                name: django-secret
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: secret-volume
+              readOnly: true
+              mountPath: /root/.postgresql/
+      volumes:
+        - name: secret-volume
+          secret:
+            secretName: postgres-secret
+            defaultMode: 384
