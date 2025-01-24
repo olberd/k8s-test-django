@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrate
+spec:
+  ttlSecondsAfterFinished: 10
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: django-app
+          image: olberd/django-hub:latest
+          envFrom:
+            - configMapRef:
+                name: django-config
+            - secretRef:
+                name: django-secret
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: dsn
+          command: [ 'python', 'manage.py', 'migrate', '--noinput' ]
