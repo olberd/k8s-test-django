@@ -6,11 +6,3 @@ metadata:
 data:
   DEBUG: <base64-encoded-debug>
   ALLOWED_HOSTS: <base64-encoded-hosts>
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: django-secret
-type: Opaque
-stringData:
-  SECRET_KEY: <base64-encoded-secret_key>
